@@ -4,6 +4,8 @@ const github = require('@actions/github');
 console.log('--- RUNNING AUTO CHANGELOG ---')
 
 try {
+    console.log(JSON.stringify(github.context));
+    console.log(JSON.stringify(github.event));
     console.log(JSON.stringify(github.event.pull_request));
 }
 catch (error) {

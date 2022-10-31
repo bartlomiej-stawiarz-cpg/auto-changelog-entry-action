@@ -9690,6 +9690,8 @@ const github = __nccwpck_require__(5438);
 console.log('--- RUNNING AUTO CHANGELOG ---')
 
 try {
+    console.log(JSON.stringify(github.context));
+    console.log(JSON.stringify(github.event));
     console.log(JSON.stringify(github.event.pull_request));
 }
 catch (error) {
