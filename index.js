@@ -3,7 +3,8 @@ const github = require('@actions/github');
 
 
 try {
-    console.log(JSON.stringify(github.context.payload, undefined, 2));
+    console.log(JSON.stringify(github.context));
+    github.context.
 }
 catch (error) {
     core.setFailed(error.message);
