@@ -9687,9 +9687,10 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 
+console.log('--- RUNNING AUTO CHANGELOG ---')
 
 try {
-    console.log(JSON.stringify(github.context.payload, undefined, 2));
+    console.log(JSON.stringify(github.event.pull_request));
 }
 catch (error) {
     core.setFailed(error.message);
