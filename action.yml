@@ -1,0 +1,10 @@
+name: 'Auto Changelog Entry'
+description: 'Automatically adds a changelog entry to a specified file when PR is merged.'
+inputs:
+  changelog-file:
+    description: 'Changelog file to use'
+    required: true
+    default: 'CHANGELOG.md'
+runs:
+  using: 'node18'
+  main: 'index.js'
