@@ -9773,7 +9773,7 @@ async function run() {
             let data = {...processTemplateConfigTable(pullRequest.body), ...templateVariables };
             let entryText = prepareChangelogEntryText(template, data);
 
-            console.log(`Registered variables: ${data}`);
+            console.log(data);
             console.log(`Prepared entry text: ${entryText}`);
         }
     }
