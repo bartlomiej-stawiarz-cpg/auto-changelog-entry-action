@@ -9751,6 +9751,8 @@ function prepareChangelogEntryText(template, templateVariableDefinitions) {
     Object.keys(templateVariableDefinitions).forEach(key => {
         template = template.replaceAll(`$${key.toUpperCase().trim()}`, templateVariableDefinitions[key]);
     });
+
+    return template;
 }
 
 
