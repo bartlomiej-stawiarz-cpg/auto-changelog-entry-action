@@ -5,6 +5,14 @@ inputs:
     description: 'Changelog file to use'
     required: true
     default: 'CHANGELOG.md'
+  template:
+    description: 'Template for the changelog entry'
+    required: true
+    default: '$TITLE'
+  ignore-label:
+    description: 'Label that skips the execution if present'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
