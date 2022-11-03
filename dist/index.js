@@ -9749,7 +9749,7 @@ function processTemplateConfigTable(prDescription) {
 
 function prepareChangelogEntryText(template, templateVariableDefinitions) {
     Object.keys(templateVariableDefinitions).forEach(key => {
-        template = template.replaceAll(`$${key.toUpper().trim()}`, templateVariableDefinitions[key]);
+        template = template.replaceAll(`$${key.toUpperCase().trim()}`, templateVariableDefinitions[key]);
     });
 }
 
