@@ -9705,7 +9705,6 @@ function processTemplateConfigTable(prDescription) {
 
     let lines = prDescription.split(/\r?\n/);
 
-    let emptyLineFound = false;
     let potentialHeadingFound = false;
     let headingFound = false;
 
@@ -9729,17 +9728,11 @@ function processTemplateConfigTable(prDescription) {
                 continue;
             }
 
-            emptyLineFound = false;
             potentialHeadingFound = false;
         }
-        else if (emptyLineFound) {
+        else {
             if (line.match(/^\|?\ *Key\ *\|\ *Value\ *\|?$/)) {
                 potentialHeadingFound = true;
-            }
-        }
-        else {
-            if (line === '') {
-                emptyLineFound = true;
             }
         }
     }
