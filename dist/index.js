@@ -9721,7 +9721,7 @@ function processTemplateConfigTable(prDescription) {
                 break;
             }
 
-            results[match[1].toUpper()] = match[2];
+            results[match[1].trim()] = match[2].trim();
         }
         else if (potentialHeadingFound) {
             if (line.match(/^\|?\ *:?\-{3,}:?\ *\|\ *:?\-{3,}:?\ *\|?$/)) {
@@ -9749,7 +9749,7 @@ function processTemplateConfigTable(prDescription) {
 
 function prepareChangelogEntryText(template, templateVariableDefinitions) {
     Object.keys(templateVariableDefinitions).forEach(key => {
-        template = template.replaceAll(`$${key.toUpper()}`, templateVariableDefinitions[key]);
+        template = template.replaceAll(`$${key.toUpper().trim()}`, templateVariableDefinitions[key]);
     });
 }
 
