@@ -72,15 +72,12 @@ async function run() {
         ignoreLabel = core.getInput('ignore-label');
         changelogFileName = core.getInput('changelog-file');
         typeLabelPrefix = core.getInput('type-label-prefix');
-    
-        console.log(pullRequest);
 
         if (ignoreLabel === "" || !pullRequest.labels.includes(ignoreLabel)) {
             let templateVariables = {
-                date_time: new Date().toUTCString(),
                 author: pullRequest.author,
                 title: pullRequest.title,
-                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix)) || 'other'
+                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix))?.map(el => el.substring(typeLabelPrefix.length)) ?? 'other'
             }
             let data = {...processTemplateConfigTable(pullRequest.body), ...templateVariables };
             let entryText = prepareChangelogEntryText(template, data);
