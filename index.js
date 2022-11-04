@@ -77,7 +77,7 @@ async function run() {
             let templateVariables = {
                 author: pullRequest.author,
                 title: pullRequest.title,
-                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix))?.map(el => el.substring(typeLabelPrefix.length)) ?? 'other'
+                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix))?.substring(typeLabelPrefix.length) ?? 'other'
             }
             let data = {...processTemplateConfigTable(pullRequest.body), ...templateVariables };
             let entryText = prepareChangelogEntryText(template, data);
