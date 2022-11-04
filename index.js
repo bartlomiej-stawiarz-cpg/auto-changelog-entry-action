@@ -70,18 +70,37 @@ async function run() {
         pullRequest = getPullRequestData();
         template = core.getInput('template');
         ignoreLabel = core.getInput('ignore-label');
+        changelogFileName = core.getInput('changelog-file');
+        typeLabelPrefix = core.getInput('type-label-prefix');
     
         if (ignoreLabel === "" || !pullRequest.labels.includes(ignoreLabel)) {
             let templateVariables = {
-                date_time: new Date().toISOString(),
+                date_time: new Date().toUTCString(),
                 author: pullRequest.author,
-                title: pullRequest.title
+                title: pullRequest.title,
+                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix)) || 'other'
             }
             let data = {...processTemplateConfigTable(pullRequest.body), ...templateVariables };
             let entryText = prepareChangelogEntryText(template, data);
 
-            console.log(data);
+            console.log(`Resolved variables: ${JSON.stringify(data)}`);
             console.log(`Prepared entry text: ${entryText}`);
+
+            let changelogfile;
+
+            try {
+                changelogFile = await fs.open(changelogFileName, 'w+');
+                let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
+
+                await changelogFile.write(`${entryText}\n`, 0);
+                await changelogFile.write(changelogContent, entryText.length + 1);
+            }
+            finally {
+                changelogfile?.close();
+            }
+        }
+        else {
+            console.log('Skipped adding changelog entry because ignore label was found');
         }
     }
     catch (error) {

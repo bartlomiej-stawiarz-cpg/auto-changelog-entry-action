@@ -8,9 +8,13 @@ inputs:
   template:
     description: 'Template for the changelog entry'
     required: true
-    default: '$TITLE'
+    default: '[$TYPE] $TITLE'
   ignore-label:
     description: 'Label that skips the execution if present'
+    required: false
+    default: ''
+  type-label-prefix:
+    description: 'Prefix of labels that indicate the type of the change'
     required: false
     default: ''
 runs:
