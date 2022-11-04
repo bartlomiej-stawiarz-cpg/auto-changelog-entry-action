@@ -9694,7 +9694,9 @@ function getPullRequestData() {
         title: github.context.payload.pull_request.title,
         body: github.context.payload.pull_request.body,
         labels: github.context.payload.pull_request.labels.map(label => label.name),
-        author: github.context.payload.pull_request.user.login
+        author: github.context.payload.pull_request.user.login,
+        number: github.context.payload.pull_request.number,
+        url: github.context.payload.pull_request.html_url
     }
 }
 
@@ -9742,7 +9744,7 @@ function processTemplateConfigTable(prDescription) {
 
 function prepareChangelogEntryText(template, templateVariableDefinitions) {
     Object.keys(templateVariableDefinitions).forEach(key => {
-        template = template.replaceAll(`$${key.toUpperCase().trim()}`, templateVariableDefinitions[key]);
+        template = template.replaceAll(`$CL_${key.toUpperCase().trim()}`, templateVariableDefinitions[key]);
     });
 
     return template;
@@ -9763,7 +9765,9 @@ async function run() {
             let templateVariables = {
                 author: pullRequest.author,
                 title: pullRequest.title,
-                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix))?.substring(typeLabelPrefix.length) ?? 'other'
+                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix))?.substring(typeLabelPrefix.length) ?? 'other',
+                number: pullRequest.number,
+                url: pullRequest.url
             }
             let data = {...processTemplateConfigTable(pullRequest.body), ...templateVariables };
             let entryText = prepareChangelogEntryText(template, data);
