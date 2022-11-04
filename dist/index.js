@@ -9693,7 +9693,7 @@ function getPullRequestData() {
     return {
         title: github.context.payload.pull_request.title,
         body: github.context.payload.pull_request.body,
-        labels: github.context.payload.pull_request.labels,
+        labels: github.context.payload.pull_request.labels.map(label => label.name),
         author: github.context.payload.pull_request.user.login
     }
 }
