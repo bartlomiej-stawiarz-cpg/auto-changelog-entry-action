@@ -94,6 +94,8 @@ async function run() {
             try {
                 changelogFile = await fs.open(changelogFileName, 'w+');
                 let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
+                
+                console.log(changelogContent);
 
                 await changelogFile.write(`${entryText}\n`, 0);
                 await changelogFile.write(changelogContent, entryText.length + 1);
