@@ -74,6 +74,7 @@ async function run() {
         ignoreLabel = core.getInput('ignore-label');
         changelogFileName = core.getInput('changelog-file');
         typeLabelPrefix = core.getInput('type-label-prefix');
+        targetDir = core.getInput('target-dir');
 
         if (ignoreLabel === "" || !pullRequest.labels.includes(ignoreLabel)) {
             let templateVariables = {
@@ -97,7 +98,7 @@ async function run() {
                 
                 console.log(changelogContent);
 
-                let files = fs.readdir('.');
+                let files = fs.readdir(targetDir);
                 console.log(JSON.stringify(files));
 
                 await changelogFile.write(`${entryText}\n`, 0);

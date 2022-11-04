@@ -17,6 +17,10 @@ inputs:
     description: 'Prefix of labels that indicate the type of the change'
     required: false
     default: ''
+  target-dir:
+    description: 'Directory containing changelog file'
+    required: true
+    default: $GITHUB_WORKSPACE
 runs:
   using: 'node16'
   main: 'dist/index.js'
