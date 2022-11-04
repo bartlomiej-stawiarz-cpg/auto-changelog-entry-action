@@ -73,6 +73,8 @@ async function run() {
         changelogFileName = core.getInput('changelog-file');
         typeLabelPrefix = core.getInput('type-label-prefix');
     
+        console.log(pullRequest);
+
         if (ignoreLabel === "" || !pullRequest.labels.includes(ignoreLabel)) {
             let templateVariables = {
                 date_time: new Date().toUTCString(),
