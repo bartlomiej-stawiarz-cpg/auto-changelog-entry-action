@@ -9785,7 +9785,7 @@ async function run() {
                 
                 console.log(changelogContent);
 
-                let files = fs.readdir(targetDir);
+                let files = await fs.readdir(targetDir);
                 console.log(JSON.stringify(files));
 
                 await changelogFile.write(`${entryText}\n`, 0);
