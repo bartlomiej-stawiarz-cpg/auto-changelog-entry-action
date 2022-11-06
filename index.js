@@ -96,6 +96,7 @@ async function run() {
                 changelogFile = await fs.open(core.toPlatformPath(`${targetDir}/${changelogFileName}`), 'r+');
                 let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
                 
+                entryText = `${entryText}\n`;
                 await changelogFile.write(entryText, 0);
                 await changelogFile.write(changelogContent, entryText.length);
             }
