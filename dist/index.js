@@ -9779,15 +9779,9 @@ async function run() {
             let changelogfile;
 
             try {
-                console.log(`Target dir: ${targetDir}`);
-                changelogFile = await fs.open(core.toPlatformPath(`${targetDir}/${changelogFileName}`), 'w+');
+                changelogFile = await fs.open(core.toPlatformPath(`${targetDir}/${changelogFileName}`), 'r+');
                 let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
                 
-                console.log(changelogContent);
-
-                let files = await fs.readdir(targetDir);
-                console.log(JSON.stringify(files));
-
                 await changelogFile.write(`${entryText}\n`, 0);
                 await changelogFile.write(changelogContent, entryText.length + 1);
             }
