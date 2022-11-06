@@ -93,7 +93,8 @@ async function run() {
             let changelogfile;
 
             try {
-                changelogFile = await fs.open(changelogFileName, 'w+');
+                console.log(`Target dir: ${targetDir}`);
+                changelogFile = await fs.open(toPlatformPath(`${targetDir}/${changelogFileName}`), 'w+');
                 let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
                 
                 console.log(changelogContent);
