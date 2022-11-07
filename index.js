@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const { promises: fs } = require('fs');
+const yaml = require('yaml');
 
 
 function getPullRequestData() {
@@ -56,6 +57,62 @@ function processTemplateConfigTable(prDescription) {
     return results;
 }
 
+function combineLabels(labels, labelGroup, prefix, suffix) {
+    const separator = labelGroup.separator ?? ',';
+
+    const combinedLabels = labels.join(separator);
+
+    return `${prefix}${combinedLabels}${suffix}`;
+}
+
+function separateLabels(labels, labelGroup, prefix, suffix) {
+    const separator = labelGroup.separator ?? ' ';
+
+    let results = [];
+
+    labels.forEach(label => results.push(`${prefix}${label}${suffix}`));
+
+    return results.join(separator);
+}
+
+function processLabelGroup(labelGroup, labels) {
+    const typeProcessors = {'combined': combineLabels, 'separate': separateLabels};
+
+    const prefix = labelGroup.prefix ?? '';
+    const suffix = labelGroup.suffix ?? '';
+
+    let presentLabels;
+
+    if (Array.isArray(labelGroup.labels)) {
+        presentLabels = labelGroup.labels.filter(label => labels.includes(label));
+    }
+    else {
+        presentLabels = labels.filter(label => label.startsWith(labelGroup.labels));
+    }
+
+    if (!presentLabels.length) {
+        return labelGroup.default !== undefined ? `${prefix}${labelGroup.default}${suffix}` : '';
+    }
+    
+    if (labelGroup.replacers) {
+        labelGroup.replacers.forEach(replacer => {
+            presentLabels = presentLabels.map(label => label.replaceAll(replacer.from, replacer.to));
+        });
+    }
+
+    return typeProcessors[labelGroup.type](presentLabels, labelGroup, prefix, suffix);
+}
+
+function processLabels(labelGroups, labels) {
+    const results = {};
+
+    labelGroups.forEach(labelGroup => {
+        results[`label_${labelGroup.id.toLowerCase()}`] = processLabelGroup(labelGroup, labels);
+    });
+
+    return results;
+}
+
 function prepareChangelogEntryText(template, templateVariableDefinitions) {
     Object.keys(templateVariableDefinitions).forEach(key => {
         template = template.replaceAll(`$CL_${key.toUpperCase().trim()}`, templateVariableDefinitions[key]);
@@ -64,48 +121,72 @@ function prepareChangelogEntryText(template, templateVariableDefinitions) {
     return template;
 }
 
+function getDefaultConfig() {
+    return {
+        changelogFilePath: 'CHANGELOG.md',
+        template: '$TITLE',
+        labelGroups: []
+    }
+}
+
+async function buildConfig(configFilePath) {
+    let config;
+
+    try {
+        const configFileContent = await fs.readFile(configFilePath, {encoding: 'utf8'});
+        config = yaml.parse(configFileContent);
+    }
+    catch (err) {
+        console.log('Could not load configuration. File is invalid or does not exist.');
+        config = getDefaultConfig();
+    }
+    
+    return config;
+}
+
 
 async function run() {
     console.log('--- RUNNING AUTO CHANGELOG ---');
 
     try {
-        pullRequest = getPullRequestData();
-        template = core.getInput('template');
-        ignoreLabel = core.getInput('ignore-label');
-        changelogFileName = core.getInput('changelog-file');
-        typeLabelPrefix = core.getInput('type-label-prefix');
-        targetDir = core.getInput('target-dir');
+        const pullRequest = getPullRequestData();
+        const ignoreLabel = core.getInput('ignore-label');
+        const configFilePath = core.getInput('config-file');
 
-        if (ignoreLabel === "" || !pullRequest.labels.includes(ignoreLabel)) {
-            let templateVariables = {
-                author: pullRequest.author,
-                title: pullRequest.title,
-                type: pullRequest.labels.find(el => el.startsWith(typeLabelPrefix))?.substring(typeLabelPrefix.length) ?? 'other',
-                number: pullRequest.number,
-                url: pullRequest.url
-            }
-            let data = {...processTemplateConfigTable(pullRequest.body), ...templateVariables };
-            let entryText = prepareChangelogEntryText(template, data);
-
-            console.log(`Resolved variables: ${JSON.stringify(data)}`);
-            console.log(`Prepared entry text: ${entryText}`);
-
-            let changelogfile;
-
-            try {
-                changelogFile = await fs.open(core.toPlatformPath(`${targetDir}/${changelogFileName}`), 'r+');
-                let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
-                
-                entryText = `${entryText}\n`;
-                await changelogFile.write(entryText, 0);
-                await changelogFile.write(changelogContent, entryText.length);
-            }
-            finally {
-                changelogfile?.close();
-            }
-        }
-        else {
+        if (ignoreLabel !== '' && pullRequest.labels.includes(ignoreLabel)) {
             console.log('Skipped adding changelog entry because ignore label was found');
+            return;  
+        }
+
+        const config = await buildConfig(configFilePath);
+        const changelogFilePath = config.changelogFilePath;
+        const template = config.template;
+        const labelGroups = config.labelGroups;
+
+        let templateVariables = {
+            author: pullRequest.author,
+            title: pullRequest.title,
+            number: pullRequest.number,
+            url: pullRequest.url
+        }
+        let data = {...processTemplateConfigTable(pullRequest.body), ...processLabels(labelGroups, pullRequest.labels), ...templateVariables };
+        let entryText = prepareChangelogEntryText(template, data);
+
+        console.log(`Resolved variables: ${JSON.stringify(data)}`);
+        console.log(`Prepared entry text: ${entryText}`);
+
+        let changelogfile;
+
+        try {
+            changelogFile = await fs.open(core.toPlatformPath(changelogFilePath), 'r+');
+            let changelogContent = await changelogFile.readFile({encoding: 'utf8'});
+            
+            entryText = `${entryText}\n`;
+            await changelogFile.write(entryText, 0);
+            await changelogFile.write(changelogContent, entryText.length);
+        }
+        finally {
+            changelogfile?.close();
         }
     }
     catch (error) {

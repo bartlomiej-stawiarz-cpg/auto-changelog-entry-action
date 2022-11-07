@@ -1,26 +1,14 @@
 name: 'Auto Changelog Entry'
 description: 'Automatically adds a changelog entry to a specified file when PR is merged.'
 inputs:
-  changelog-file:
-    description: 'Changelog file to use'
+  config-file-path:
+    description: 'Path to the configuration file'
     required: true
-    default: 'CHANGELOG.md'
-  template:
-    description: 'Template for the changelog entry'
-    required: true
-    default: '$TITLE'
+    default: '.github/auto-changelog-config.yml'
   ignore-label:
     description: 'Label that skips the execution if present'
     required: false
     default: ''
-  type-label-prefix:
-    description: 'Prefix of labels that indicate the type of the change'
-    required: false
-    default: ''
-  target-dir:
-    description: 'Directory containing changelog file'
-    required: true
-    default: $GITHUB_WORKSPACE
 runs:
   using: 'node16'
   main: 'dist/index.js'
