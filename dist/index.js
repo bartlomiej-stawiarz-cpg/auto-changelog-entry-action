@@ -18109,9 +18109,9 @@ function prepareChangelogEntryText(template, templateVariableDefinitions) {
 
 function getDefaultConfig() {
     return {
-        changelogFilePath: 'CHANGELOG.md',
-        template: '$CL_TITLE',
-        labelGroups: []
+        'changelog-file-path': 'CHANGELOG.md',
+        'template': '$CL_TITLE',
+        'label-groups': []
     }
 }
 
@@ -18146,9 +18146,9 @@ async function run() {
         }
 
         const config = await buildConfig(configFilePath);
-        const changelogFilePath = config.changelogFilePath;
-        const template = config.template;
-        const labelGroups = config.labelGroups;
+        const changelogFilePath = core.toPlatformPath(config['changelog-file-path']);
+        const template = config['template'];
+        const labelGroups = config['label-groups'];
 
         let templateVariables = {
             author: pullRequest.author,
