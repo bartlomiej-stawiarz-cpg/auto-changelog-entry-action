@@ -4,7 +4,7 @@ inputs:
   config-file-path:
     description: 'Path to the configuration file'
     required: true
-    default: '.github/auto-changelog-config.yml'
+    default: '.github/auto_changelog_config.yml'
   ignore-label:
     description: 'Label that skips the execution if present'
     required: false
