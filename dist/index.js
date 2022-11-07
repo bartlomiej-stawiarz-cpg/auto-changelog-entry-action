@@ -18102,7 +18102,7 @@ function processLabels(labelGroups, labels) {
 
 function prepareChangelogEntryText(template, templateVariableDefinitions) {
     Object.keys(templateVariableDefinitions).forEach(key => {
-        template = template.replaceAll(`$CL_${key.toUpperCase().trim()}`, templateVariableDefinitions[key]);
+        template = template.replaceAll(`$CL_${key.toUpperCase().trim()}$`, templateVariableDefinitions[key]);
     });
 
     return template;
@@ -18111,7 +18111,7 @@ function prepareChangelogEntryText(template, templateVariableDefinitions) {
 function getDefaultConfig() {
     return {
         'changelog-file-path': 'CHANGELOG.md',
-        'template': '$CL_TITLE',
+        'template': '$CL_TITLE$',
         'label-groups': []
     }
 }
