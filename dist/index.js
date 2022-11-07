@@ -18114,15 +18114,16 @@ function getDefaultConfig() {
 }
 
 async function buildConfig(configFilePath) {
-    let config;
+    let config = getDefaultConfig();
 
     try {
         const configFileContent = await fs.readFile(configFilePath, {encoding: 'utf8'});
-        config = yaml.parse(configFileContent);
+        const parsed_config = yaml.parse(configFileContent);
+        config = { ...config, ...parsed_config };
+        
     }
     catch (err) {
         console.log('Could not load configuration. File is invalid or does not exist.');
-        config = getDefaultConfig();
     }
     
     return config;
