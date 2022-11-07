@@ -10,6 +10,9 @@ function getPullRequestData() {
         body: github.context.payload.pull_request.body,
         labels: github.context.payload.pull_request.labels.map(label => label.name),
         author: github.context.payload.pull_request.user.login,
+        author_url: github.context.payload.pull_request.user.html_url,
+        merged_by: github.context.payload.pull_request.merged_by.login,
+        merged_by_url: github.context.payload.pull_request.merged_by.html_url,
         number: github.context.payload.pull_request.number,
         url: github.context.payload.pull_request.html_url
     }
@@ -166,9 +169,12 @@ async function run() {
 
         let templateVariables = {
             author: pullRequest.author,
+            author_url: pullRequest.author_url,
             title: pullRequest.title,
             number: pullRequest.number,
-            url: pullRequest.url
+            url: pullRequest.url,
+            merged_by: pullRequest.merged_by,
+            merged_by_url: pullRequest.merged_by_url
         }
         let data = {...processTemplateConfigTable(pullRequest.body), ...processLabels(labelGroups, pullRequest.labels), ...templateVariables };
         let entryText = prepareChangelogEntryText(template, data);
