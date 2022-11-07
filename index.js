@@ -124,7 +124,7 @@ function prepareChangelogEntryText(template, templateVariableDefinitions) {
 function getDefaultConfig() {
     return {
         changelogFilePath: 'CHANGELOG.md',
-        template: '$TITLE',
+        template: '$CL_TITLE',
         labelGroups: []
     }
 }
