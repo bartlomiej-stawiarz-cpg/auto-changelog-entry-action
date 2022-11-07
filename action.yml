@@ -1,7 +1,7 @@
 name: 'Auto Changelog Entry'
 description: 'Automatically adds a changelog entry to a specified file when PR is merged.'
 inputs:
-  config-file-path:
+  config-file:
     description: 'Path to the configuration file'
     required: true
     default: '.github/auto_changelog_config.yml'
