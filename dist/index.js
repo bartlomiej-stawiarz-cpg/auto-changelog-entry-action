@@ -18090,6 +18090,8 @@ function processLabelGroup(labelGroup, labels) {
 function processLabels(labelGroups, labels) {
     const results = {};
 
+    console.log(`Label groups: ${JSON.stringify(labelGroups)}`);
+
     labelGroups.forEach(labelGroup => {
         results[`label_${labelGroup.id.toLowerCase()}`] = processLabelGroup(labelGroup, labels);
     });
@@ -18157,6 +18159,8 @@ async function run() {
         let data = {...processTemplateConfigTable(pullRequest.body), ...processLabels(labelGroups, pullRequest.labels), ...templateVariables };
         let entryText = prepareChangelogEntryText(template, data);
 
+
+        console.log(`Configuration: ${JSON.stringify(config)}`);
         console.log(`Resolved variables: ${JSON.stringify(data)}`);
         console.log(`Prepared entry text: ${entryText}`);
 
