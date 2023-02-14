@@ -143,7 +143,7 @@ jobs:
       - run: ls -la
       
       - name: Add an entry to the changelog
-        uses: bartlomiej-stawiarz-cpg/auto-changelog-entry-action@main
+        uses: bartlomiej-stawiarz-cpg/auto-changelog-entry-action@v0.1.0
         with:
           config-file: '.github/auto_changelog_config.yml'
           ignore-label: 'no-changelog'
