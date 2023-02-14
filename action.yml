@@ -3,7 +3,7 @@ description: 'Automatically adds a changelog entry to a specified file when PR i
 inputs:
   config-file:
     description: 'Path to the configuration file'
-    required: true
+    required: false
     default: '.github/auto_changelog_config.yml'
   ignore-label:
     description: 'Label that skips the execution if present'
