@@ -57,6 +57,28 @@ Keys used for label group definition:
 - `default` - default value to use if no labels belonging to the given label group are set
 - `replacers` - definition of string replacements that should be performed on each label, one by one
 
+### `config table`
+
+Config table lets you define any custom injectable variables.
+They can be used by adding to a PR's description a standard Markdown table with two columns where the heading's first cell contains the word *Key* and the second cell contains the word *Value*.
+If there are multiple tables present, only the first one is used.
+In case of a name conflict with the built-in variables (eg. specifying a key *AUTHOR*), the variable will persist its default value.
+
+Example:
+```
+| Key | Value |
+| --- | --- |
+| CRI | [CRI-13716](https://favro.com/organization/56851efba9d86382848cd889/2189191c43971636725e712c?card=cri-13716) |
+| AUTHORS | John Jenkins, Adam Travis |
+| EMOJI | :smiley: |
+```
+
+would set following additional variables:
+- `$CL_CRI$` with the value ``[CRI-13716](https://favro.com/organization/56851efba9d86382848cd889/2189191c43971636725e712c?card=cri-13716)``
+- `$CL_AUTHORS$` with the value ``John Jenkins, Adam Travis``
+- `$CL_EMOJI$` with the value ``:smiley:``
+
+
 ### Example config file
 
 ```yaml
@@ -81,7 +103,7 @@ label-groups:
         to: ''
 ```
 
-Eg.: Considering a PR with labels **sku/april-jigsaw**, **sku/jigsaw-lite**, **type/bug-fix** set and with a config table where for the key **CRI** the value is set to ```[CRI-13716](https://favro.com/organization/56851efba9d86382848cd889/2189191c43971636725e712c?card=cri-13716)```, the following entry will be added at the top of the CHANGELOG.MD file:  
+Eg.: Considering a PR with labels ``sku/april-jigsaw``, ``sku/jigsaw-lite``, ``type/bug-fix`` set and a config table where for the key ``CRI`` the value is set to ``[CRI-13716](https://favro.com/organization/56851efba9d86382848cd889/2189191c43971636725e712c?card=cri-13716)``, the following entry will be added at the top of the CHANGELOG.MD file:  
 ```
 [bug-fix] [sku: april-jigsaw,jigsaw-lite] [[PR-33](https://github.com/bartlomiej-stawiarz-cpg/test-actions/pull/33)] [[CRI-13716](https://favro.com/organization/56851efba9d86382848cd889/2189191c43971636725e712c?card=cri-13716)] Test with multiple SKUs by @bartlomiej-stawiarz-cpg  
 ```
