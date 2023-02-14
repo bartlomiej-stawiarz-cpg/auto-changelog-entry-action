@@ -57,7 +57,7 @@ Keys used for a label group definition:
 
 - `id` - unique id of the group, used for variable's name generation
 - `labels` - either an array of exact labels that should be grouped under this label group or a string that the considered labels begin with
-- `type` - type of the group - either *combined* which applies the prefix and suffix only once or *separate* which applies the prefix to each label separately
+- `type` - type of the group - either `combined` which applies the prefix and suffix only once or `separate` which applies the prefix to each label separately
 - `separator` - string to separate the labels with (after applying the prefix and the suffix)
 - `prefix` - prefix for the label or labels, depending on the *type*
 - `suffix` - suffix for the label or labels, depending on the *type*
