@@ -139,8 +139,6 @@ jobs:
 
       - name: Ensure changelog file exists
         run: touch CHANGELOG.md
-        
-      - run: ls -la
       
       - name: Add an entry to the changelog
         uses: bartlomiej-stawiarz-cpg/auto-changelog-entry-action@v0.1.0
